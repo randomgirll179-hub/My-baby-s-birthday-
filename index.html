@@ -1,96 +1,161 @@
-<style>
-    /* Full page background styling */
-    body {
-        margin: 0;
-        padding: 0;
-        min-height: 100vh;
-        background-image: url('your-background-image-url.jpg'); /* Agar aapki background image koi specific hai to uska naam/URL yahan likhein */
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        overflow-x: hidden;
-        font-family: 'Arial', sans-serif;
-    }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday</title>
+    <style>
+        /* Full page background styling */
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            /* Aapki purani balloons wali image ka link yahan lagaya hai */
+            background-image: url('https://images.unsplash.com/photo-1530103862676-de8c9debad1d?q=80&w=1000&auto=format&fit=crop'); 
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+        }
 
-    /* Envelope Container */
-    .envelope-wrapper {
-        position: relative;
-        width: 320px;
-        height: 220px;
-        background-color: #ff3366; /* Main envelope base color */
-        border-radius: 0 0 10px 10px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        margin-top: 150px; /* Card ko nikalne ke liye space */
-    }
+        /* Envelope Container */
+        .envelope-wrapper {
+            position: relative;
+            width: 320px;
+            height: 220px;
+            background-color: #ff3366; 
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            cursor: pointer;
+            margin-top: 100px;
+        }
 
-    /* Envelope Top Flap (Open state) */
-    .envelope-wrapper::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 0;
-        height: 0;
-        border-left: 160px solid transparent;
-        border-right: 160px solid transparent;
-        border-bottom: 110px solid transparent; /* Flap open positioning */
-        z-index: 5;
-    }
+        /* Envelope Top Flap (Closed State) */
+        .envelope-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 160px solid transparent;
+            border-right: 160px solid transparent;
+            border-top: 110px solid #ff4d79;
+            transform-origin: top;
+            transition: transform 0.4s ease 0.2s, z-index 0.2s;
+            z-index: 5;
+        }
 
-    /* Envelope Front Left & Right Folds */
-    .envelope-wrapper::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 0;
-        height: 0;
-        border-left: 160px solid #ff1a53;
-        border-right: 160px solid #ff1a53;
-        border-top: 110px solid transparent;
-        border-bottom: 110px solid #ff1a53;
-        border-radius: 0 0 10px 10px;
-        z-index: 4;
-    }
+        /* When envelope is open, flap flips up */
+        .envelope-wrapper.open::before {
+            transform: rotateX(180px);
+            z-index: 1;
+            border-top-color: transparent;
+            border-bottom: 110px solid #ff4d79;
+            top: -110px;
+        }
 
-    /* Letter/Card Styling */
-    .letter-card {
-        position: absolute;
-        bottom: 20px; /* Adjust default position inside envelope */
-        left: 10px;
-        width: 300px;
-        background: #fffdf6;
-        border-radius: 8px;
-        padding: 20px;
-        box-sizing: border-box;
-        box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
-        z-index: 2;
-        transition: transform 0.5s ease;
-        text-align: center;
-    }
+        /* Envelope Front Folds (Main pocket) */
+        .envelope-wrapper::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 160px solid #ff1a53;
+            border-right: 160px solid #ff1a53;
+            border-top: 110px solid transparent;
+            border-bottom: 110px solid #ff1a53;
+            border-radius: 0 0 10px 10px;
+            z-index: 4;
+        }
 
-    /* Lifted animation for the card when opened */
-    .envelope-wrapper.open .letter-card {
-        transform: translateY(-120px);
-        z-index: 6; /* Lifafe se upar dikhne ke liye */
-    }
+        /* Letter/Card Styling */
+        .letter-card {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            width: 300px;
+            background: #fffdf6;
+            border-radius: 8px;
+            padding: 20px;
+            box-sizing: border-box;
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
+            z-index: 2;
+            transition: transform 0.6s ease;
+            text-align: center;
+        }
 
-    /* Big Number "17" Styling on Envelope */
-    .envelope-number {
-        position: absolute;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        font-size: 80px;
-        font-weight: bold;
-        color: #ff99bb;
-        text-shadow: 2px 2px 5px rgba(0,0,0,0.2);
-        z-index: 5; /* Folds ke upar dikhane ke liye */
-        pointer-events: none;
-    }
-        </style>
+        /* Card lifts up dramatically when open */
+        .envelope-wrapper.open .letter-card {
+            transform: translateY(-160px);
+            z-index: 6; 
+        }
+
+        /* Text Styling inside the card */
+        .letter-card h1 {
+            font-size: 20px;
+            color: #5c3a21;
+            margin-top: 0;
+            font-style: italic;
+            font-weight: bold;
+        }
+
+        .letter-card p {
+            font-size: 16px;
+            color: #5c3a21;
+            line-height: 1.5;
+            margin: 10px 0;
+            font-style: italic;
+        }
+
+        /* Big Number "17" on Envelope */
+        .envelope-number {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 90px;
+            font-weight: bold;
+            color: #ff99bb;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+            z-index: 5; 
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Hide number slightly when card comes over it */
+        .envelope-wrapper.open .envelope-number {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="envelope-wrapper" id="envelope" onclick="toggleEnvelope()">
         
+        <div class="envelope-number">17</div>
+
+        <div class="letter-card">
+            <h1>HAPPY BIRTHDAY MERI JAN 😊🌻👑🌈</h1>
+            <p>Aj ap ka 17th birthday h, aj ap ka din h. Ham sath m to cake cut nhi kar sakte, lakin ese hi sahi chalen, ab jaldi se cake cut karen meri ♦ jan 😊😘</p>
+        </div>
+
+    </div>
+
+    <script>
+        function toggleEnvelope() {
+            const envelope = document.getElementById('envelope');
+            envelope.classList.toggle('open');
+        }
+    </script>
+
+</body>
+                                           </html>
+            
